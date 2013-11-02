@@ -1,0 +1,144 @@
+<?php
+    interface Calculation
+    {
+        public function CalcPerimetr();
+        public function CalcArea();
+    }
+    abstract class Figure implements Calculation
+    {
+        protected $per;
+        protected $area;
+        abstract protected function ShowResult();
+        public function __construct($p=0,$a=0) {
+            $this->a = $a;
+            $this->p = $p;
+        }
+    }
+    class Circle extends Figure 
+    {
+        private $diametr;
+        public function ShowResult() 
+        {
+            $this->CalcPerimetr();
+            $this->CalcArea();            
+            echo 'Коло з діметром d = '.$this->diametr.'<br>';
+            echo 'Має довжину L = '.$this->per.' та площу S = '.$this->area.'<br>';
+        }
+        public function CalcArea() 
+        {
+            $this->area = (1/4)*pi()*$this->diametr*$this->diametr;
+        }
+        public function CalcPerimetr() 
+        {
+            $this->per = pi() * $this->diametr;
+        }
+        public function __construct($diametr) 
+        {
+            parent::__construct();
+            $this->diametr = $diametr;
+        }
+    }
+    class Triangle extends Figure
+    {
+        private $a;
+        private $b;
+        private $c;
+        public function CalcPerimetr() 
+        {
+            $this->per = $this->a + $this->b + $this->c;
+        }
+        public function CalcArea() 
+        {
+            $this->area = sqrt($this->per*($this->per - $this->a)*($this->per - $this->b)*($this->per - $this->c));
+        }
+        public function ShowResult() 
+        {            
+            $this->CalcPerimetr();
+            $this->CalcArea();
+            echo 'Трикутник зі сторонами а = '.$this->a.',b = '.$this->b.',c = '.$this->c.'<br>';
+            echo 'Має периметр Р = '.$this->per.' та площу S = '.$this->area.'<br>';
+        }
+        public function __construct($a=3,$b=4,$c=5) 
+        {
+            parent::__construct();
+            $this->a = $a;
+            $this->b = $b;
+            $this->c = $c;
+        }
+    }
+    class Square extends Figure
+    {
+        private $stor;
+        public function ShowResult() 
+        {
+            $this->CalcArea();
+            $this->CalcPerimetr();
+            echo 'Квадрат зі стороню а = '.$this->stor.'<br>';
+            echo 'Має периметр Р = '.$this->per.' та площу S = '.$this->area.'<br>';
+        }
+        public function CalcArea() 
+        {
+            $this->area = $this->stor*$this->stor;
+        }
+        public function CalcPerimetr() {
+            $this->per = $this->stor*4;
+        }
+        public function __construct($stor) {
+            parent::__construct();
+            $this->stor = $stor;
+        }
+    }
+    class Truk extends Figure
+    {
+        private $storA;
+        private $storB;
+        private $storC;
+        public function __construct($a,$b,$c) {
+            parent::__construct();
+            $this->storA = $a;
+            $this->storB = $b;
+            $this->storC = $c;
+        }
+        public function ShowResult() 
+        {
+            $this->CalcPerimetr();
+            $this->CalcArea();
+            echo 'Трикутник зі сторонами а = '.$this->storA.',b = '.$this->storB.',c = '.$this->storC.'<br>';
+            echo 'Має периметр Р = '.$this->per.' та площу S = '.$this->area.'<br>';
+        }
+        public function CalcArea() 
+        {
+            $p = $this->per / 2;
+            $this->area = sqrt($p*($p - $this->storA)*($p - $this->storB)*($p - $this->storC));
+        }
+        public function CalcPerimetr() 
+        {
+            $this->per = $this->storA + $this->storB + $this->storC;
+        }
+    }
+    $f = fopen("1.txt", "r");
+    while (!feof($f))
+    {
+        $s = fgets($f);
+        $data = explode(" ", $s);
+        if($data[0]=='Truk')
+        {
+            $obj = new Truk($data[1], $data[2], $data[3]);
+            $obj->ShowResult();
+            unset ($obj);
+        }
+        if($data[0]=='Square')
+        {
+            $obj = new Square($data[1]);
+            $obj->ShowResult();
+            unset ($obj);
+        }
+        if($data[0]=='Circle')
+        {
+            $obj = new Circle($data[1]);
+            $obj->ShowResult();
+            unset ($obj);
+        }
+    }
+    echo 'end';
+?>
